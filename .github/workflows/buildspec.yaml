@@ -24,7 +24,7 @@ jobs:
           role-to-assume: ${{ env.AWS_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Test access and list S3 buckets
+      - name: Test access and list S3 buckets all at once
         run: |
           echo "Attempting to retrieve the caller identity..."
           aws sts get-caller-identity

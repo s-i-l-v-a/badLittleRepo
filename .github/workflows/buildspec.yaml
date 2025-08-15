@@ -1,0 +1,32 @@
+name: AWS OIDC PoC
+
+on: [push]
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ROLE: ${{ secrets.AWS_ROLE }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  assume_aws_role:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Test access and list S3 buckets
+        run: |
+          echo "Attempting to retrieve the caller identity..."
+          aws sts get-caller-identity
+          echo "Listing the S3 buckets..."
+          aws s3 ls
